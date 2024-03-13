@@ -8,9 +8,9 @@ using namespace std::chrono_literals;
 
 int main()
 {
-    for(int i = 0; ; i++)
-    {
-        std::cerr << i << " seconds since epoch\n";
-        std::this_thread::sleep_for(1000ms);
-    }
+	for (int i = 0; ; i++)
+	{
+		std::cerr << i << " seconds since epoch\n";
+		std::this_thread::sleep_for(1000ms);
+	}
 }

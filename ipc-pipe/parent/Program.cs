@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -59,7 +55,7 @@ namespace parent
         static async Task Main(string[] args)
         {
             int retCode = 0;
-            using (Process tomoProcess =
+            using (Process childProcess =
                 new Process
                 {
                     StartInfo =
@@ -75,29 +71,26 @@ namespace parent
 
                 try
                 {
-                    tomoProcess.ErrorDataReceived += (sender, eventArgs) =>
+                    childProcess.ErrorDataReceived += (sender, eventArgs) =>
                     {
-                        Console.WriteLine($"{nameof(tomoProcess)},  {eventArgs.Data}");
+                        Console.WriteLine($"{nameof(childProcess)},  {eventArgs.Data}");
                     };
-                    tomoProcess.Start();
-                    tomoProcess.BeginErrorReadLine();
-                    var exitCode = await tomoProcess.WaitForExitAsync();
+                    childProcess.Start();
+                    childProcess.BeginErrorReadLine();
+                    var exitCode = await childProcess.WaitForExitAsync();
                     retCode = exitCode;
                 }
                 catch (OperationCanceledException)
                 {
-                    tomoProcess.Kill();
-                    return; //Task is cancelled from the UI no neccesary to continue
+                    childProcess.Kill();
                 }
                 catch (ArgumentNullException a)
                 {
                     System.Console.WriteLine(a.Message);
-                    return; //Task is cancelled from the UI no neccesary to continue
                 }
                 catch (Exception w)
                 {
                     System.Console.WriteLine("here");
-                    return;
                 }
 
             }
