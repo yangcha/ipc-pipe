@@ -64,7 +64,7 @@ namespace parent
                 {
                     StartInfo =
                     {
-                        FileName = "printout.exe",
+                        FileName = "child.exe",
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         RedirectStandardError = true,
