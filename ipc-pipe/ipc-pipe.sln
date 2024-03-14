@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.34601.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parent", "parent\parent.csproj", "{F013C816-2D68-47B5-93E2-FD6E7843B3CE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4E6A3AF5-7CC7-440C-9E15-525338D304EE} = {4E6A3AF5-7CC7-440C-9E15-525338D304EE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "child", "child\child.vcxproj", "{4E6A3AF5-7CC7-440C-9E15-525338D304EE}"
 EndProject

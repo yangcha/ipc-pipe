@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace parent
 {
@@ -54,6 +55,10 @@ namespace parent
     {
         static async Task Main(string[] args)
         {
+            int length = 512 * 512 * 2000;
+            byte[] data = Enumerable.Repeat((byte)0xff, length).ToArray();
+            var sw = new Stopwatch();
+            sw.Start();
             int retCode = 0;
             using (Process childProcess =
                 new Process
@@ -61,8 +66,10 @@ namespace parent
                     StartInfo =
                     {
                         FileName = "child.exe",
+                        Arguments = $"{length}",
                         UseShellExecute = false,
                         CreateNoWindow = true,
+                        RedirectStandardInput = true,
                         RedirectStandardError = true,
                     },
                 }
@@ -77,12 +84,19 @@ namespace parent
                     };
                     childProcess.Start();
                     childProcess.BeginErrorReadLine();
+
+                    var childIn = childProcess.StandardInput.BaseStream;
+                    childIn.Write(data, 0, data.Length);
+                    childIn.Flush();
+                    childIn.Close();
+                    sw.Stop();
                     var exitCode = await childProcess.WaitForExitAsync();
                     retCode = exitCode;
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException c)
                 {
                     childProcess.Kill();
+                    System.Console.WriteLine(c.Message);
                 }
                 catch (ArgumentNullException a)
                 {
@@ -90,10 +104,10 @@ namespace parent
                 }
                 catch (Exception w)
                 {
-                    System.Console.WriteLine("here");
+                    System.Console.WriteLine(w.Message);
                 }
-
             }
+            Console.WriteLine($"data passed done {sw.Elapsed.TotalMilliseconds:0.0}ms");
         }
     }
 }
